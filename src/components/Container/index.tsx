@@ -1,9 +1,10 @@
 import styled from 'styled-components/native';
 
-const Container = styled.View`
+const Container = styled.SafeAreaView`
   flex: 1;
-  align-items: center;
-  justify-content: center;
+  padding-top: 4px;
+  padding-right: 16px;
+  padding-left: 16px;
   background-color: ${ props => props.theme.colors.primary };
 `;
 

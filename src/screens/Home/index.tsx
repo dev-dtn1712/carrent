@@ -38,9 +38,9 @@ export default function Home() {
   }
 
   return (
-      <Container onLayout={onLayoutRootView}>
-        <Cars />
-      </Container>
+    <Container onLayout={onLayoutRootView}>
+      <Cars />
+    </Container>
   );
 }
 

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import useAxios from 'axios-hooks';
 import { StatusBar } from 'expo-status-bar';
-import { Text } from 'react-native';
+import { FlatList } from 'react-native';
 
 import Card from '../../components/Card';
 import ErrorInfo from '../../components/Error';
@@ -20,12 +20,19 @@ const Cars = () => {
   }, [data]);
 
   if (error) {
-    return <ErrorInfo errorMessage={error?.message} />
+    return <ErrorInfo errorMessage={error?.message} />;
   }
 
   if (loading) {
     return <Loading />;
   }
+
+  const renderItem = ({ item }) => (<Card
+      title={item.car}
+      subtitle={item.car_model}
+      img={`https://picsum.photos/id/${item.id}/200/300`}
+    />
+  );
 
   return (
     <>
@@ -33,9 +40,14 @@ const Cars = () => {
         translucent
         backgroundColor="transparent"
       />
-      {!!cars?.length && cars.map(car => <Card key={car.id} data={car} />)}
+      <FlatList
+        data={cars}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+      />
     </>
-  )
+  );
 }
 
 export default Cars;

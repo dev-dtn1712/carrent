@@ -1,9 +1,20 @@
-import { Text } from "react-native";
+import Thumbnail from './Thumbnail';
+import CardContainer from './CardContainer';
+import InfoSection from './InfoSection';
+import Title from './Title';
+import SubTitle from './SubTitle';
 
-const Card = ({ data }) => {
-  console.log(data);
+const Card = ({ title, subtitle, img }) => {
   return (
-    <Text>hi</Text>
+    <CardContainer>
+      <InfoSection>
+        <Title>{title}</Title>
+        <SubTitle>{subtitle}</SubTitle>
+      </InfoSection>
+
+      <Thumbnail>
+      </Thumbnail>
+    </CardContainer>
   );
 };
 
