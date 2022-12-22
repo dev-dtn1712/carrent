@@ -1,0 +1,1 @@
+export const FAKE_CAR_API_ENDPOINT = 'https://myfakeapi.com/api/cars/';
