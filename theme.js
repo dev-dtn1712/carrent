@@ -6,5 +6,6 @@ export default {
         text_light: '#aeaeb3',
         primary_text: "#47474d",
         main: '#dc1627',
+        primary_button: '#841584',
     }
 };
