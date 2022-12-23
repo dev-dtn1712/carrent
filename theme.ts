@@ -5,5 +5,6 @@ export default {
         secondary: '#ffffff',
         text_light: '#aeaeb3',
         primary_text: "#47474d",
+        main: '#dc1627',
     }
 };

@@ -28,8 +28,10 @@ const Cars = () => {
   }
 
   const renderItem = ({ item }) => (<Card
-      title={item.car}
-      subtitle={item.car_model}
+      title={item.car}          // name
+      subtitle={item.car_model} // brand
+      description={item.price}  // price
+      availability={item.availability} // availability
       img={`https://picsum.photos/id/${item.id}/200/300`}
     />
   );
