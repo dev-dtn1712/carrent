@@ -27,6 +27,7 @@
     "react-native-error-boundary": "^1.1.16",
     "react-native-fast-image": "^8.6.3",
     "react-native-loading-spinner-overlay": "^3.0.1",
+    "react-native-range-slider-expo": "^1.4.3",
     "react-native-web": "~0.18.9",
     "styled-components": "^5.3.6",
     "undefined": "@expo/vector-icons/Entypo"
