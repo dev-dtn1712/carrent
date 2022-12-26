@@ -17,8 +17,9 @@ const CRangeSlider = ({ min, max, setFromValue, setToValue }) => {
       showValueLabels={false}
       barHeight={3}
       containerStyle={{
+        width: '100%',
         padding: 5,
-        height: 30
+        height: 30,
       }}
     />
   );

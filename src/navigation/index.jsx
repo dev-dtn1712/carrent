@@ -16,18 +16,21 @@ const AppNavigation = () => {
 			/>
 			<NavigationContainer independent={true}>
 				<Stack.Navigator
-					initialRouteName="Home"
-					screenOptions={{
+					initialRouteName="All Cars"
+					options={{
 						title: 'All Cars',
 						headerShown: true,
-						cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+						cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
 					}}
 				>
-					<Stack.Screen name="Home" component={HomeScreen} />
+					<Stack.Screen name="All Cars" component={HomeScreen} />
 					<Stack.Screen
 						name="Filter"
 						component={Filter}
-						options={{ cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, headerShown: true }}
+						options={{
+							cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+							headerShown: false,
+						}}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>
