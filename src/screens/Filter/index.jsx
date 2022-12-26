@@ -1,46 +1,67 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
 import { Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker'
 import { useTheme } from 'styled-components/native';
 import Container from '../../components/Container';
 import FlexContainer from '../../components/Container/FlexContainer';
 import CRangeSlider from '../../components/RangerSlider';
 import { COLORS, BRANDS } from '../../constants/variables';
-import { useFilterHooks } from '../../hooks/filterHooks';
+import { useFilter } from '../../contexts/filterContext';
 
 const Filter = () => {
-  const [
+  const {
     fromYear,
     toYear,
     fromPrice,
     toPrice,
     selectedColor,
     selectedBrand,
-    setFromYear,
-    setToYear,
-    setFromPrice,
-    setToPrice,
-    setColor,
-    setBrand,
-  ] = useFilterHooks();
+    updateFromYear,
+    updateToYear,
+    updateFromPrice,
+    updateToPrice,
+    updateColor,
+    updateBrand,
+    clearAllFilters,
+ } = useFilter();
   const navigation = useNavigation();
   const theme = useTheme();
 
-  const pickColor = (color) => {
-    if (selectedColor === color) {
-      setColor('');
-    } else {
-      setColor(color);
-    }
+  const [currentFromYear, setCurrentFromYear] = useState(fromYear);
+  const [currentToYear, setCurrentToYear] = useState(toYear);
+  const [currentFromPrice, setCurrentFromPrice] = useState(fromPrice);
+  const [currentToPrice, setCurrentToPrice] = useState(toPrice);
+  const [currentSelectedColor, setCurrentSelectedColor] = useState(selectedColor);
+  const [currentSelectedBrand, setCurrentSelectedBrand] = useState(selectedBrand);
+  
+  const colors = COLORS.map(color => ({ label: color, value: color }));
+  const [openColorDropdown, setOpenColorDropdown] = useState(false);
+  const [colorItems, setColorItems] = useState(colors);
+
+  const brands = BRANDS.map(brand => ({ label: brand, value: brand }));
+  const [openBrandDropdown, setOpenBrandDropdown] = useState(false);
+  const [brandItems, setBrandItems] = useState(brands);
+
+  const showResult = () => {
+    updateFromYear(currentFromYear);
+    updateToYear(currentToYear);
+    updateFromPrice(currentFromPrice);
+    updateToPrice(currentToPrice);
+    updateColor(currentSelectedColor);
+    updateBrand(currentSelectedBrand);
+    navigation.goBack();
   }
 
-  const pickBrand = (brand) => {
-    if (selectedBrand === brand) {
-      setBrand('');
-    } else {
-      setBrand(brand);
-    }
+  const clearFilters = () => {
+    setCurrentFromYear(1950);
+    setCurrentToYear(2023);
+    setCurrentFromPrice(0);
+    setCurrentToPrice(10000);
+    setCurrentSelectedColor('');
+    setCurrentSelectedBrand('');
+    clearAllFilters();
   }
 
   return (
@@ -49,14 +70,16 @@ const Filter = () => {
         <View style={{ marginRight: 8, width: 110 }}>
           <Text>Filter By Years</Text>
           <Text style={{ fontWeight: 'bold', color: theme.colors.primary_button }}>
-            ({fromYear} - {toYear})
+            ({currentFromYear} - {currentToYear})
           </Text>
         </View>
         <CRangeSlider          
           min={1950}
           max={2023}
-          setFromValue={setFromYear}
-          setToValue={setToYear}
+          fromValue={currentFromYear}
+          toValue={currentToYear}
+          setFromValue={setCurrentFromYear}
+          setToValue={setCurrentToYear}
         />
       </FlexContainer>
 
@@ -64,14 +87,16 @@ const Filter = () => {
         <View style={{ marginRight: 8, width: 110 }}>
           <Text>Filter By Price</Text>
           <Text style={{ fontWeight: 'bold', color: theme.colors.primary_button }}>
-            ({fromPrice} - {toPrice})  
+            ({currentFromPrice} - {currentToPrice})  
           </Text>
         </View>
         <CRangeSlider
           min={0}
           max={10000}
-          setFromValue={setFromPrice}
-          setToValue={setToPrice}
+          fromValue={currentFromPrice}
+          toValue={currentToPrice}
+          setFromValue={setCurrentFromPrice}
+          setToValue={setCurrentToPrice}
         />
       </FlexContainer>
       <FlexContainer>
@@ -79,50 +104,54 @@ const Filter = () => {
           <Text>Filter By Color</Text>
         </View>
         <FlexContainer>
-          {COLORS.map((color, index) =>
-            <TouchableOpacity
-              key={index}
-              onPress={() => pickColor(color)}
-              style={{
-                width: 30,
-                height: 30,
-                backgroundColor: color.toLowerCase(),
-                borderRadius: 100,
-                borderWidth:  selectedColor === color ? 3 : 0,
-                borderColor: 'gray',
-              }}
-            />)
-          }
+          <DropDownPicker
+            open={openColorDropdown}
+            value={currentSelectedColor}
+            items={colorItems}
+            setOpen={setOpenColorDropdown}
+            setValue={setCurrentSelectedColor}
+            setItems={setColorItems}
+            multiple={false}
+            badgeDotColors={COLORS}
+            mode={'BADGE'}
+          />
         </FlexContainer>
       </FlexContainer>
 
-      <FlexContainer>
+      <FlexContainer style={{ zIndex: -99 }}>
         <View style={{ marginRight: 8, width: 110 }}>
           <Text>Filter By Brand</Text>
         </View>
-        <FlexContainer>
-          {BRANDS.map((brand, index) =>
-            <TouchableOpacity
-              key={index}
-              onPress={() => pickBrand(brand)}
-              style={{
-                backgroundColor: theme.colors.primary_button,
-                color: theme.colors.primary,
-                padding: 6,
-                borderWidth:  selectedBrand === brand ? 3 : 0,
-                borderColor: 'gray',
-              }}
-            >
-              {brand}
-            </TouchableOpacity>
-          )}
+        <FlexContainer style={{ flex: 1, width: '100%' }}>
+          <DropDownPicker
+            open={openBrandDropdown}
+            value={currentSelectedBrand}
+            items={brandItems}
+            setOpen={setOpenBrandDropdown}
+            setValue={setCurrentSelectedBrand}
+            setItems={setBrandItems}
+            multiple={false}
+            badgeDotColors={BRANDS}
+            mode={'BADGE'}
+          />
         </FlexContainer>
       </FlexContainer>
 
-      <Button
-        title="Show Result"
-        onPress={() => navigation.navigate('All Cars')}
-      />
+      <FlexContainer style={{ zIndex: -100, marginTop: 24 }}>
+        <View style={{ width: '50%', paddingRight: 8 }}>
+          <Button
+            color={theme.colors.secondary_button}
+            title="Clear All Filters"
+            onPress={clearFilters}
+          />
+        </View>
+        <View style={{ width: '50%', paddingLeft: 8 }}>
+          <Button
+            title="Show Result"
+            onPress={showResult}
+          />
+        </View>
+      </FlexContainer>
     </Container>
   );
 };

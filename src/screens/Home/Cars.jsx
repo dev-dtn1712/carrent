@@ -5,26 +5,28 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from 'styled-components/native';
 
 import FlexContainer from '../../components/Container/FlexContainer';
+import CenterContainer from '../../components/Container/CenterContainer';
 import Card from '../../components/Cars';
 import ErrorInfo from '../../components/Error';
 import Loading from '../../components/Loading';
 import Input from '../../components/Input';
-import { useFilterHooks } from '../../hooks/filterHooks';
+import WarningText from '../../components/Text/WarningText';
 import { FAKE_CAR_API_ENDPOINT } from '../../constants/variables';
+import { useFilter } from '../../contexts/filterContext';
 
 const Cars = () => {
   const [{ data, loading, error }] = useAxios(
     FAKE_CAR_API_ENDPOINT
   );
 
-  const [
+  const {
     fromYear,
     toYear,
     fromPrice,
     toPrice,
     selectedColor,
-    selectedBrand
-  ] = useFilterHooks();
+    selectedBrand,
+ } = useFilter();
 
   const navigation = useNavigation();
   const theme = useTheme();
@@ -39,7 +41,7 @@ const Cars = () => {
       if (!searchKey) {
         searchFilterCar = cars;
       } else {
-        searchFilterCar = cars.filter(car => car.car.toLowerCase().includes(searchKey));
+        searchFilterCar = cars.filter(car => car.car.toLowerCase().includes(searchKey.toLowerCase()));
       }
 
       const filterCars = searchFilterCar.filter(car => {
@@ -49,11 +51,18 @@ const Cars = () => {
           (Number(car.car_model_year) >= fromYear && Number(car.car_model_year) <= toYear) &&
           (Number(carPrice) >= fromPrice && Number(carPrice) <= toPrice)
         ) {
-          if (selectedColor && car.car_color === selectedColor) {
-            return car;
-          }
-          if (selectedBrand && car.car_model === selectedBrand) {
-            return car;
+          if (selectedColor && selectedBrand) {
+            if (car.car_color === selectedColor && car.car_model === selectedBrand) {
+              return car;
+            }
+          } else if (selectedColor && !selectedBrand) {
+            if (car.car_color === selectedColor) {
+              return car;
+            }
+          } else if (!selectedColor && selectedBrand) {
+            if (car.car_model === selectedBrand) {
+              return car;
+            }
           }
           return car;
         }
@@ -79,16 +88,16 @@ const Cars = () => {
 
   const searchCars = (searchKey) => {
     setSearchKey(searchKey);
-    // if (searchKey.length > 0)  {
-    //   const filterCars = cars.filter(car => car.car.includes(searchKey));
-    //   setCars(filterCars);
-    // } else {
-    //   setCars(data.cars);
-    // }
   }
 
   const filterMore = () => {
     navigation.navigate('Filter');
+  }
+
+  if (!cars?.length) {
+    return <CenterContainer>
+      <WarningText> No Result </WarningText>
+    </CenterContainer>
   }
 
   return (

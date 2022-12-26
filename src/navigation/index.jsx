@@ -29,7 +29,7 @@ const AppNavigation = () => {
 						component={Filter}
 						options={{
 							cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-							headerShown: false,
+							headerShown: true,
 						}}
 					/>
 				</Stack.Navigator>
