@@ -20,3 +20,9 @@ After installed npm packages, run ```npm run start``` on your terminal
 ### How to bring up the app locally
 <li> Download git repository </li>
 <li> Download all source code from <a href="https://snack.expo.dev/@dev-dtn1712/github.com-dev-dtn1712-carrent">Snack</a> </li>
+
+
+### DEMO Video
+
+https://user-images.githubusercontent.com/86306353/209565278-0ae4f375-e856-4c39-94f3-351eb1d71524.mov
+
